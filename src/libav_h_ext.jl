@@ -15,6 +15,11 @@ typealias int8_t Int8
 typealias uint16_t Uint16
 typealias int16_t Int16
 
+typealias pthread_mutex_t Void
+typealias AVCodecDefault Void
+typealias AVDictionary Void
+typealias AVMetadataConv Void
+
 ###
 include("libav_h.jl")
 include("avutil.jl")
