@@ -65,4 +65,6 @@ context = wrap_c.WrapContext(
     clang_includes, ASCIIString[],
     check_use_header, get_header_library,
     get_header_outfile)
+context.options.wrap_structs = true
+
 wrap_c.wrap_c_headers(context, av_headers)
