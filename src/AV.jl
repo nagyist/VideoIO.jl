@@ -1,6 +1,7 @@
 module AV
 
-const lib="libav-0.8"
+#const lib="libav-0.8"
+const lib="ffmpeg-2.2"
 w(f) = joinpath(Pkg.dir("AV"), "src", lib, f)
 
 export Codec, SWScale, Format

@@ -11,6 +11,7 @@ av_hpath = [
   "/usr/include/libavutil/",
   "/usr/include/libavcodec/",
   "/usr/include/libavformat/",
+#  "/usr/include/libavdevice/",
   "/usr/include/libswscale/"]
 
 ignore_header = DefaultDict(ASCIIString, Bool, false)
@@ -62,8 +63,7 @@ function get_header_outfile(hpath)
   return "$base_file.jl"
 end
 
-function rewrite_fn(e::Expr)
-    (head, call, body) = @match e Expr(head, [call, body], _) => (head, call, body)
+function rewrite_fn(e, call, body)
 
     parms = Any[]
     content = Any[]
@@ -116,6 +116,20 @@ function rewrite_fn(e::Expr)
     return new
 end
 
+rewrite(buf::Array) = {rewrite(e) for e in buf}
+
+rewrite(s::String) = s
+
+function rewrite(e::Expr)
+    try
+        @match e begin
+            Expr(:function, [call, body],                         _)  =>  return rewrite_fn(e, call, body)
+            Expr(:type,     [false, name, Expr(:block, args, _)], _)  =>  return isempty(args) ? Expr(:typealias, name, :Void) : e
+        end
+    end
+    return e
+end
+
 out_path = pwd()
 
 context = wrap_c.init(
@@ -125,5 +139,5 @@ context = wrap_c.init(
     header_wrapped = check_use_header, 
     header_library = get_header_library,
     header_outputfile = get_header_outfile,
-    func_rewriter = rewrite_fn)
+    rewriter = rewrite)
 wrap_c.wrap_c_headers(context, av_headers)

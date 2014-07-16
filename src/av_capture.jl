@@ -136,7 +136,7 @@ function open(source::String;
     aVideoFrame = [AVFrame()]
     aTargetVideoFrame = [AVFrame()]
 
-    pFmtDesc = get_pix_fmt_descriptor_ptr(target_pix_fmt)
+    pFmtDesc = av_pix_fmt_desc_get(target_pix_fmt)
     bits_per_pixel = av_get_bits_per_pixel(pFmtDesc)
 
     if bits_per_pixel % 8 != 0
@@ -212,7 +212,7 @@ function retrieve(c::AVCapture)
         error("No frame available for retrieval")
     end
 
-    pFmtDesc = get_pix_fmt_descriptor_ptr(c.target_pix_fmt)
+    pFmtDesc = av_pix_fmt_desc_get(c.target_pix_fmt)
     bits_per_pixel = av_get_bits_per_pixel(pFmtDesc)
 
     if bits_per_pixel % 8 != 0
@@ -250,11 +250,11 @@ function retrieve!(c::AVCapture, buf::Array{Uint8})
 
     sws_scale(c.transcode_context,
               pointer(c.aVideoFrame),
-              pointer(c.aVideoFrame) + 4*sizeof(Ptr),
+              pointer(c.aVideoFrame) + sizeof(c.aVideoFrame[1].data),
               zero(Int32),
               c.height,
               pointer(c.aTargetVideoFrame),
-              pointer(c.aTargetVideoFrame) + 4*sizeof(Ptr))
+              pointer(c.aTargetVideoFrame) + sizeof(c.aVideoFrame[1].data))
 
     reset_frame_flag!(c)
 

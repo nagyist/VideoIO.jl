@@ -127,11 +127,11 @@ function show_vid(sample_file)
 
                 sws_scale(sws_ctx, 
                           pointer(aFrame),
-                          pointer(aFrame) + 4*sizeof(Ptr),
+                          pointer(aFrame) + sizeof(aFrame[1].data),
                           zero(Int32),
                           height,
                           pointer(aFrameRGB),
-                          pointer(aFrameRGB) + 4*sizeof(Ptr))
+                          pointer(aFrameRGB) + sizeof(aFrame[1].data))
 
                 img = Images.Image(rgb_buffer, {"colordim" => 1, "colorspace" => "RGB", "spatialorder" => ["x", "y"]})
 
