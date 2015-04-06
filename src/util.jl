@@ -4,7 +4,7 @@
 # Set the value of a field of a pointer
 # Equivalent to s->name = value
 function av_setfield{T}(s::Ptr{T}, name::Symbol, value)
-    field = findfirst(names(T), name)
+    field = findfirst(fieldnames(T), name)
     byteoffset = fieldoffsets(T)[field]
     S = T.types[field]
     
@@ -14,7 +14,7 @@ function av_setfield{T}(s::Ptr{T}, name::Symbol, value)
 end
 
 function av_pointer_to_field{T}(s::Ptr{T}, name::Symbol)
-    field = findfirst(names(T), name)
+    field = findfirst(fieldnames(T), name)
     byteoffset = fieldoffsets(T)[field]
     return s + byteoffset
 end

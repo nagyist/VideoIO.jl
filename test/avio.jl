@@ -1,6 +1,7 @@
 using Base.Test
 using Images, FixedPointNumbers
 import VideoIO
+using Compat
 
 testdir = joinpath(Pkg.dir("VideoIO"), "test")
 videodir = joinpath(Pkg.dir("VideoIO"), "videos")
@@ -44,7 +45,7 @@ end
 println(STDERR, "Testing IO reading...")
 for name in VideoIO.TestVideos.names()
     # TODO: fix me?
-    (beginswith(name, "ladybird") || beginswith(name, "NPS")) && continue
+    (startswith(name, "ladybird") || startswith(name, "NPS")) && continue
 
     println(STDERR, "   Testing $name...")
     first_frame_file = joinpath(testdir, swapext(name, ".png"))
